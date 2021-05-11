@@ -5,7 +5,7 @@ from flaskext.mysql import MySQL
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = r'mysql+pymysql://root:%Xu&C+5>WAC,6at?+7p{@localhost/users'
+app.config['SQLALCHEMY_DATABASE_URI'] = r'mysql+pymysql://root:{@localhost/users'
 app.config['SECRET KEY'] = "secret phrase"
 db = SQLAlchemy(app)
 
