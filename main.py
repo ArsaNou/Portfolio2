@@ -1,3 +1,5 @@
+import http
+
 from flask import Flask, request, jsonify, make_response
 from flask_restful import Api, Resource, reqparse, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -42,6 +44,35 @@ class Prod(Resource):
         return '', 204
 
 
+class Cart(Resource):
+    cart = []
+
+    # Prøver å sjekke om to product er lik hverandre, men får ikke til
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def get(self):
+        return self.cart
+
+    def put(self, product):
+        if product not in self.cart:
+            self.cart.append(product)
+            return '', 201
+        else:
+            return "Product is already in cart"
+        # Kan jo ha flere av et produkt.??
+
+    def delete(self, product):
+        if product not in self.cart:
+            return 400  # Bad Request
+        else:
+            for item in self.cart:
+                if item == product:
+                    self.cart.remove(item)
+                    return 'product removed from cart', 200
+
+
+api.add_resource(Cart, "/cart/etellerannet")
 api.add_resource(Prod, "/product/<int:prod_id>")
 
 if __name__ == '__main__':
