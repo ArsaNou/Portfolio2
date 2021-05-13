@@ -10,11 +10,19 @@ BASE = "http://127.0.0.1:5000/"
 
 #window.mainloop()
 
-action_list = ["get", "put", "delete"]
-resource_list = ["product", "user", "chatroom"]
-index_list = []
+#action_list = ["get", "put", "delete"]
+#resource_list = ["product", "user", "chatroom"]
+#index_list = []
 #index = 0
 
+
+#response = requests.put(BASE + "product/0", {"name": "This is name", "price": 100, "colors": 100})
+response = requests.patch(BASE + "product/0", {"price":300})
+print(response.json())
+
+
+
+"""
 while True:
 
 	while True:
@@ -127,7 +135,6 @@ while True:
 		#break
 
 
-"""
 response = requests.get(BASE + "user/1")
 print(response)
 print(response.json())
