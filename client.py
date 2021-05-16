@@ -17,8 +17,18 @@ BASE = "http://127.0.0.1:5000/"
 
 
 #response = requests.put(BASE + "product/0", {"name": "This is name", "price": 100, "colors": 100})
-response = requests.patch(BASE + "product/0", {"price":300})
-print(response.json())
+#response = requests.patch(BASE + "product/0", {"price":300})
+counter = 2
+while True:
+	name = input("Name: ")
+	price = input("Price: ")
+	colors = input("Colors: ")
+	response = requests.put(BASE + "product/" + str(counter), {"name": name, "price": price, "colors": colors})
+	print(response.json())
+	br = input("Break")
+	counter += 1
+	if br:
+		break
 
 
 

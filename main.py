@@ -42,6 +42,19 @@ resource_fields = {
     'colors': fields.Integer
 }
 
+class Products(Resource):
+    @marshal_with(resource_fields)
+    def get(self):
+        @after_this_request
+        def add_header(response):
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
+        result = ProductModel.query.all()
+        if not result:
+            abort(404, message="Could not find product with that id...")
+        return result
+        #return products[prod_id]
+
 class Product(Resource):
     @marshal_with(resource_fields)
     def get(self, prod_id):
@@ -111,6 +124,7 @@ class Product(Resource):
         return '', 204
 
 api.add_resource(Product, "/product/<int:prod_id>")
+api.add_resource(Products, "/products")
 
 if __name__ == '__main__':
     app.run(debug=True)
