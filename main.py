@@ -1,17 +1,17 @@
+# import os.path
 from flask import Flask, request, jsonify, make_response, after_this_request
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/database.db'
+app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['Access-Control-Allow-Origin'] = '*'
 db = SQLAlchemy(app)
-
-
-prod_put_args = reqparse.RequestParser()
-prod_put_args.add_argument("name", type=str, help="Name of the product", required=True)
-prod_put_args.add_argument("number", type=int, help="Number of products")
-prod_put_args.add_argument("price", type=int, help="Price of the products")
 
 
 class ProductModel(db.Model):
@@ -20,10 +20,12 @@ class ProductModel(db.Model):
     price = db.Column(db.Integer, nullable=False)
     colors = db.Column(db.Integer, nullable=False)
 
+    def __repr__(self):
+        return f"Product(name={name}, price = {price}, colors = {colors})"
 
-products = {}
 
-
+# if not os.path.exists("tmp/database.db"):
+#    db.create_all()
 
 prod_put_args = reqparse.RequestParser()
 prod_put_args.add_argument("name", type=str, help="Name of the product", required=True)
@@ -124,24 +126,21 @@ class Product(Resource):
         def add_header(response):
             response.headers['Access-Control-Allow-Origin'] = '*'
             return response
-
         abort_if_prod_id_doesnt_exist(prod_id)
         del products[prod_id]
         return '', 204
 
 
-
 class Cart(Resource):
     cart = []
-
-
 
     def get(self):
         return self.cart
 
+    @marshal_with()
     def put(self, product):
-        #Sjekke om produktet finnes i db
-        #Bruke reqParser
+        # Sjekke om produktet finnes i db
+        # Bruke reqParser
 
         if product not in self.cart:
             self.cart.append(product)
@@ -163,7 +162,6 @@ class Cart(Resource):
 api.add_resource(Cart, "/cart/etellerannet")
 api.add_resource(Product, "/product/<int:prod_id>")
 api.add_resource(Products, "/products")
-
 
 if __name__ == '__main__':
     app.run(debug=True)
