@@ -1,8 +1,8 @@
-# import os.path
 from flask import Flask, request, jsonify, make_response, after_this_request
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import date
 
 app = Flask(__name__)
 CORS(app)
@@ -24,8 +24,14 @@ class ProductModel(db.Model):
         return f"Product(name={name}, price = {price}, colors = {colors})"
 
 
+class PrevPurchased(db.Model):
+    dato = db.Column(db.String(100), primary_key=True)
+    price = db.Column(db.Integer, nullable=False)
+    items = db.Column(db.String(100), nullable=False)
+
 # if not os.path.exists("tmp/database.db"):
 #    db.create_all()
+
 
 prod_put_args = reqparse.RequestParser()
 prod_put_args.add_argument("name", type=str, help="Name of the product", required=True)
@@ -133,30 +139,55 @@ class Product(Resource):
 
 class Cart(Resource):
     cart = []
+    now = date.now()
 
     def get(self):
         return self.cart
 
-    @marshal_with()
-    def put(self, product):
-        # Sjekke om produktet finnes i db
-        # Bruke reqParser
-
-        if product not in self.cart:
+    @marshal_with(resource_fields)
+    def put(self):
+        @after_this_request
+        def add_header(response):
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
+        args = prod_put_args.parse_args()
+        product = ProductModel.query.filter_by(id=args['prod_id']).first()
+        if product:
             self.cart.append(product)
-            return '', 201
+            return 'Added to cart', 201
         else:
-            return "Product is already in cart"
-        # Kan jo ha flere av et produkt.??
+            return "product could not be found???", 400
 
-    def delete(self, product):
-        if product not in self.cart:
-            return 400  # Bad Request
-        else:
-            for item in self.cart:
-                if item == product:
-                    self.cart.remove(item)
-                    return 'product removed from cart', 200
+    def delete(self):
+        args = prod_put_args.parse_args()
+
+        for product in self.cart:
+            if product.prod_id == args['prod_id']:
+                self.cart.remove(product)
+                return 'Product removed', 201
+            else:
+                return 'Could not remove', 409
+
+    def calcPrice(self):
+        price = 0
+        for product in self.cart:
+            price += product.price
+        return price
+
+    def purchase(self):
+        items = "Items purchased: "
+        price = self.calcPrice()
+        dateofpurchase = self.now.strftime("%d/%m/%Y %H:%M:%S")
+
+        for item in self.cart:
+            items += item.name + ", "
+
+        purchase = PrevPurchased(dato=dateofpurchase, price=price, items=items)
+
+        db.session.add(purchase)
+        db.session.commit()
+
+        return 'Something...', 200
 
 
 api.add_resource(Cart, "/cart/etellerannet")
