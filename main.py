@@ -47,14 +47,15 @@ class Prod(Resource):
 class Cart(Resource):
     cart = []
 
-    # Prøver å sjekke om to product er lik hverandre, men får ikke til
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+
 
     def get(self):
         return self.cart
 
     def put(self, product):
+        #Sjekke om produktet finnes i db
+        #Bruke reqParser
+
         if product not in self.cart:
             self.cart.append(product)
             return '', 201
