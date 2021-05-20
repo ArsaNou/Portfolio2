@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response, after_this_request
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from datetime import date
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +13,16 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['Access-Control-Allow-Origin'] = '*'
 db = SQLAlchemy(app)
 
+#ID, NUMBER, SIZE, COLOR
+cart = {}
+
+def abort_if_not_exist(cart_id):
+    if cart_id not in cart:
+        abort(404, message="Could not find cart item...")
+
+def abort_if_exist(cart_id):
+    if cart_id in cart:
+        abort(409, message="Cart item already exists...")
 
 class ProductModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,6 +42,15 @@ class PrevPurchased(db.Model):
 # if not os.path.exists("tmp/database.db"):
 #    db.create_all()
 
+cart_put_args = reqparse.RequestParser()
+cart_put_args.add_argument("number", type=int, help="Number of products", required=True)
+cart_put_args.add_argument("size", type=int, help="Size of products", required=True)
+cart_put_args.add_argument("color", type=str, help="Color of products", required=True)
+
+cart_update_args = reqparse.RequestParser()
+cart_update_args.add_argument("number", type=int, help="Name of the product")
+cart_update_args.add_argument("size", type=int, help="Price of products")
+cart_update_args.add_argument("color", type=str, help="Colors of the products")
 
 prod_put_args = reqparse.RequestParser()
 prod_put_args.add_argument("name", type=str, help="Name of the product", required=True)
@@ -64,6 +83,9 @@ class Products(Resource):
             abort(404, message="Could not find product with that id...")
         return result
         # return products[prod_id]
+
+    def put(self):
+        pass
 
 
 class Product(Resource):
@@ -137,26 +159,38 @@ class Product(Resource):
         return '', 204
 
 
-class Cart(Resource):
-    cart = []
-    now = date.now()
-
+class Carts(Resource):
     def get(self):
-        return self.cart
-
-    @marshal_with(resource_fields)
+        return cart, 200
     def put(self):
-        @after_this_request
-        def add_header(response):
-            response.headers['Access-Control-Allow-Origin'] = '*'
-            return response
-        args = prod_put_args.parse_args()
-        product = ProductModel.query.filter_by(id=args['prod_id']).first()
-        if product:
-            self.cart.append(product)
-            return 'Added to cart', 201
-        else:
-            return "product could not be found???", 400
+        pass
+
+class Cart(Resource):
+    now = datetime.now()
+
+    def get(self, cart_id):
+        abort_if_not_exist(cart_id)
+        return cart[cart_id], 200
+
+    def put(self, cart_id):
+        abort_if_exist(cart_id)
+        args = cart_put_args.parse_args()
+        cart[cart_id] = args
+        return cart[cart_id], 201
+
+#    @marshal_with(resource_fields)
+#    def put(self):
+#        @after_this_request
+#        def add_header(response):
+#            response.headers['Access-Control-Allow-Origin'] = '*'
+#            return response
+#        args = prod_put_args.parse_args()
+#        product = ProductModel.query.filter_by(id=args['prod_id']).first()
+#        if product:
+#            self.cart.append(product)
+#            return 'Added to cart', 201
+#        else:
+#            return "product could not be found???", 404
 
     def delete(self):
         args = prod_put_args.parse_args()
@@ -189,8 +223,12 @@ class Cart(Resource):
 
         return 'Something...', 200
 
+    def delete(self, cart_id):
+        pass
 
-api.add_resource(Cart, "/cart/etellerannet")
+
+api.add_resource(Cart, "/cart/<int:cart_id>")
+api.add_resource(Carts, "/carts")
 api.add_resource(Product, "/product/<int:prod_id>")
 api.add_resource(Products, "/products")
 
