@@ -4,11 +4,23 @@ import sys
 
 BASE = "http://127.0.0.1:5000/"
 
-#window = Tk()
 
-#window.title("Client")
 
-#window.mainloop()
+def populateInitProd():
+	response = requests.put(BASE + "product/0", {"name": "Air_Jordan", "description": "Good shoes for playing basketball.", "sizes": "40, 41, 42, 43, 44, 45", "price": 199, "colors": "Red"})
+	print(response.json())
+	response = requests.put(BASE + "product/1", {"name": "Converse", "description": "Good shoes for walking.", "sizes": "40, 41, 42, 43, 44, 45", "price": 129, "colors": "Red and blue"})
+	print(response.json())
+	response = requests.put(BASE + "product/2", {"name": "Nike_Air_Max", "description": "Good shoes for running.", "sizes": "40, 41, 42, 43, 44, 45", "price": 149, "colors": "Red, blue and black"})
+	print(response.json())
+	response = requests.put(BASE + "product/3", {"name": "Nike_Revolt", "description": "Good shoes for hiking.", "sizes": "40, 41, 42, 43, 44, 45", "price": 99, "colors": "Red"})
+	print(response.json())
+	response = requests.put(BASE + "product/4", {"name": "Sneakers", "description": "Good shoes for playing in the park.", "sizes": "40, 41, 42, 43, 44, 45", "price": 109, "colors": "Red and white"})
+	print(response.json())
+	response = requests.put(BASE + "product/5", {"name": "Two_Shoes", "description": "Good shoes for driving.", "sizes": "40, 41, 42, 43, 44, 45", "price": 159, "colors": "Red and black"})
+	print(response.json())
+
+#populateInitProd()
 
 #action_list = ["get", "put", "delete"]
 #resource_list = ["product", "user", "chatroom"]
@@ -19,27 +31,76 @@ BASE = "http://127.0.0.1:5000/"
 #response = requests.put(BASE + "product/0", {"name": "This is name", "price": 100, "colors": 100})
 #response = requests.patch(BASE + "product/0", {"price":300})
 """
-counter = 0
+counter = 6
 while True:
 	name = input("Name: ")
+	description = input("Description: ")
+	sizes = input("Sizes: ")
 	price = input("Price: ")
 	colors = input("Colors: ")
-	response = requests.put(BASE + "cart/" + str(counter), {"name": name, "price": price, "colors": colors})
+	response = requests.put(BASE + "product/" + str(counter), {"name": name, "description": description, "price": price, "sizes": sizes, "colors": colors})
 	print(response.json())
 	br = input("Break")
 	counter += 1
 	if br:
 		break
 """
+"""
+counter = 0
+while True:
+	product = input("Product: ")
+	number = input("Number: ")
+	size = input("Size: ")
+	color = input("Color: ")
+	response = requests.put(BASE + "cart/" + str(counter), {"product": product, "number": number, "size": size, "color": color})
+	print(response.json())
+	br = input("Break")
+	counter += 1
+	if br:
+		break
+"""
+"""
+def deleteAllProducts():
+	counter = 0
+	while True:
+		response = requests.delete(BASE + "product/" + str(counter))
+		print(response.json())
+	
+		counter += 1
+	
+		if counter > 1000:
+			break
 
-#response = requests.put(BASE + "cart/0", {"number": 1, "size": 32, "color": "red"})
+"""
+"""
+#response = requests.get(BASE + "carts/")
 #print(response.json())
 
-response = requests.get(BASE + "carts")
-print(response.json())
+
+
+#response = requests.delete(BASE + "product/6")
+#print(response.json())
+
+#response = requests.(BASE + "products")
+#print(response.json())
 
 
 """
+
+#response = requests.put(BASE + "cart/0", {"number": 1, "size": 32, "color": "red"})
+#print(response.json())
+"""
+"""
+"""
+response = requests.get(BASE + "carts")
+print(response.json())
+
+"""
+response = requests.put(BASE + "product/7", {"name": "Shoew", "description": "description", "price": 123, "sizes": "sizes", "colors": "colors"})
+
+
+"""
+
 while True:
 
 	while True:
