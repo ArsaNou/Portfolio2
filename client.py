@@ -79,22 +79,16 @@ def deleteAllProducts():
 	
 		if counter > 1000:
 			break
-
 """
 """
 """
 #response = requests.get(BASE + "carts/")
 #print(response.json())
 """
-
-
 #response = requests.delete(BASE + "product/6")
 #print(response.json())
-
 #response = requests.(BASE + "products")
 #print(response.json())
-
-
 """
 
 #response = requests.put(BASE + "cart/0", {"number": 1, "size": 32, "color": "red"})
@@ -104,15 +98,12 @@ def deleteAllProducts():
 """
 response = requests.get(BASE + "carts")
 print(response.json())
-
 """
 #response = requests.put(BASE + "product/7", {"name": "Shoew", "description": "description", "price": 123, "sizes": "sizes", "colors": "colors"})
 
 
 """
-
 while True:
-
 	while True:
 		selected_action = input("Action: ").lower()
 		if selected_action.lower() == "quit" or selected_action.lower() == "exit":
@@ -121,7 +112,6 @@ while True:
 			break
 		print("Try again. Available actions:") 
 		print(action_list)
-
 	while True:
 		selected_resource = input("Resource: ").lower()
 		if selected_resource.lower() == "quit" or selected_resource.lower() == "exit":
@@ -130,7 +120,6 @@ while True:
 			break
 		print("Try again. Available resources:")
 		print(resource_list)
-
 	# USERS
 	
 	if selected_resource == 'users':
@@ -150,9 +139,7 @@ while True:
 			print(response)
 			for elem in response.json():
 				print(elem.values())
-
 	# USER
-
 	if selected_resource == 'user':
 		if selected_action == 'get':
 			while True:
@@ -166,7 +153,6 @@ while True:
 				
 				break
 			#print(response.json())
-
 		if selected_action == 'delete':
 			#while True:
 			get_id = int(input("ID: "))
@@ -176,9 +162,7 @@ while True:
 			response = requests.delete(BASE + f"/api/user/{get_id}")
 			print(response)
 			print("User deleted")
-
 	# CHATROOMS
-
 	if selected_resource == 'chatrooms':
 		if selected_action == 'put':
 			while True:
@@ -194,7 +178,6 @@ while True:
 			print(response)
 			for elem in response.json():
 				print(elem.values())
-
 	if selected_resource == 'chatroom':
 		if selected_action == 'get':
 			while True:
@@ -208,7 +191,6 @@ while True:
 				
 				break
 			#print(response.json())
-
 		if selected_action == 'delete':
 			#while True:
 			get_id = int(input("ID: "))
@@ -218,15 +200,11 @@ while True:
 			response = requests.delete(BASE + f"/api/user/{get_id}")
 			print(response)
 			print("User deleted")
-
 	#if input("Quit?"):
 		#break
-
-
 response = requests.get(BASE + "user/1")
 print(response)
 print(response.json())
-
 response = requests.delete(BASE + "user/1")
 print(response)
 print(response.json())

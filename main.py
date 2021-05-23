@@ -206,7 +206,7 @@ class Carts(Resource):
         #return cart[number_of_cart_items], 201
         args = cart_put_args.parse_args()
         cart.append(args)
-        return cart[num_items-1],201
+        return cart,201
 
 class Cart(Resource):
     now = datetime.now()
