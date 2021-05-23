@@ -20,7 +20,7 @@ def populateInitProd():
 	response = requests.put(BASE + "product/5", {"name": "Two_Shoes", "description": "Good shoes for driving.", "sizes": "40, 41, 42, 43, 44, 45", "price": 159, "colors": "Red and black"})
 	print(response.json())
 
-#populateInitProd()
+populateInitProd()
 
 #action_list = ["get", "put", "delete"]
 #resource_list = ["product", "user", "chatroom"]
