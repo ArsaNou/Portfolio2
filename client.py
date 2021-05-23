@@ -31,34 +31,39 @@ def populateInitProd():
 #response = requests.put(BASE + "product/0", {"name": "This is name", "price": 100, "colors": 100})
 #response = requests.patch(BASE + "product/0", {"price":300})
 """
-counter = 6
+counter = 0
 while True:
 	name = input("Name: ")
 	description = input("Description: ")
 	sizes = input("Sizes: ")
 	price = input("Price: ")
 	colors = input("Colors: ")
-	response = requests.put(BASE + "product/" + str(counter), {"name": name, "description": description, "price": price, "sizes": sizes, "colors": colors})
+	response = requests.patch(BASE + "product/" + str(counter), {"name": name, "description": description, "price": price, "sizes": sizes, "colors": colors})
 	print(response.json())
 	br = input("Break")
 	counter += 1
 	if br:
 		break
 """
+
 """
 counter = 0
 while True:
 	product = input("Product: ")
 	number = input("Number: ")
+	price = input("Price: ")
 	size = input("Size: ")
 	color = input("Color: ")
-	response = requests.put(BASE + "cart/" + str(counter), {"product": product, "number": number, "size": size, "color": color})
+	response = requests.put(BASE + "cart/" + str(counter), {"product": product, "number": number, "price": price, "size": size, "color": color})
 	print(response.json())
 	br = input("Break")
 	counter += 1
 	if br:
 		break
 """
+
+response = requests.get(BASE + "carts")
+print(response.json())
 """
 def deleteAllProducts():
 	counter = 0
@@ -96,7 +101,7 @@ response = requests.get(BASE + "carts")
 print(response.json())
 
 """
-response = requests.put(BASE + "product/7", {"name": "Shoew", "description": "description", "price": 123, "sizes": "sizes", "colors": "colors"})
+#response = requests.put(BASE + "product/7", {"name": "Shoew", "description": "description", "price": 123, "sizes": "sizes", "colors": "colors"})
 
 
 """

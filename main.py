@@ -46,12 +46,14 @@ class PrevPurchased(db.Model):
 cart_put_args = reqparse.RequestParser()
 cart_put_args.add_argument("product", type=str, help="Which product", required=True)
 cart_put_args.add_argument("number", type=int, help="Number of products", required=True)
+cart_put_args.add_argument("price", type=int, help="Price of products", required=True)
 cart_put_args.add_argument("size", type=str, help="Size of products", required=True)
 cart_put_args.add_argument("color", type=str, help="Color of products", required=True)
 
 cart_update_args = reqparse.RequestParser()
 cart_update_args.add_argument("product", type=str, help="Which product", required=True)
 cart_update_args.add_argument("number", type=int, help="Name of the product")
+cart_update_args.add_argument("price", type=int, help="Price of products")
 cart_update_args.add_argument("size", type=str, help="Size of products")
 cart_update_args.add_argument("color", type=str, help="Color of the products")
 
@@ -64,7 +66,7 @@ prod_put_args.add_argument("colors", type=str, help="Colors of the products", re
 
 prod_update_args = reqparse.RequestParser()
 prod_update_args.add_argument("name", type=str, help="Name of the product")
-prod_update_args.add_argument("description", type=str, help="Prodcut description")
+prod_update_args.add_argument("description", type=str, help="Product description")
 prod_update_args.add_argument("price", type=int, help="Price of the products")
 prod_update_args.add_argument("sizes", type=str, help="Sizes of the products")
 prod_update_args.add_argument("colors", type=str, help="Colors of the products")
@@ -96,7 +98,7 @@ class Products(Resource):
         result = ProductModel.query.all()
         if not result:
             abort(404, message="Could not find product with that id...")
-        return result
+        return result, 200
         # return products[prod_id]
 
     def put(self):
@@ -195,9 +197,12 @@ class Carts(Resource):
         return cart, 200
 
     def put(self):
+        #args = cart_put_args.parse_args()
+        #cart[number_of_cart_items] = args
+        #return cart[number_of_cart_items], 201
         args = cart_put_args.parse_args()
-        cart[number_of_cart_items] = args
-        return cart[number_of_cart_items], 201
+        cart.append(args)
+        return cart[cart_id], 201
 
 class Cart(Resource):
     now = datetime.now()
