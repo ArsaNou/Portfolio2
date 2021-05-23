@@ -101,7 +101,6 @@ class Products(Resource):
         if not result:
             abort(404, message="Could not find product with that id...")
         return result, 200
-        # return products[prod_id]
 
     def put(self):
         pass
@@ -119,7 +118,6 @@ class Product(Resource):
         if not result:
             abort(404, message="Could not find product with that id...")
         return result
-        # return products[prod_id]
 
     @marshal_with(resource_fields)
     def put(self, prod_id):
@@ -137,9 +135,7 @@ class Product(Resource):
         db.session.add(product)
         db.session.commit()
         return product, 201
-        # args = prod_put_args.parse_args()
-        # products[prod_id] = args
-        # return products[prod_id], 201
+
 
     @marshal_with(resource_fields)
     def patch(self, prod_id):
@@ -168,8 +164,6 @@ class Product(Resource):
             result.sizes = args['sizes']
         if args['colors']:
             result.colors = args['colors']
-        # Remove?
-        # db.session.add(result)
         db.session.commit()
 
         return result
@@ -201,9 +195,6 @@ class Carts(Resource):
         return cart, 200
 
     def put(self):
-        #args = cart_put_args.parse_args()
-        #cart[number_of_cart_items] = args
-        #return cart[number_of_cart_items], 201
         args = cart_put_args.parse_args()
         cart.append(args)
         return cart,201
@@ -218,7 +209,6 @@ class Cart(Resource):
     def put(self, cart_id):
         abort_if_exist(cart_id)
         args = cart_put_args.parse_args()
-        #cart[cart_id] = args
         cart.append(args)
         return cart[cart_id], 201
 
@@ -227,7 +217,6 @@ class Cart(Resource):
         args = prod_put_args.parse_args()
         del cart[cart_id]
         return "Deleted...", 204
-
 
 
     def calcPrice(self):
@@ -264,7 +253,6 @@ api.add_resource(Products, "/products")
 if not os.path.exists("tmp/database.db"):
     db.create_all()
 
-#time.sleep(5000)
 
 if __name__ == '__main__':
     app.run(debug=True)
